@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/activity_detail_logs"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="minor.com.dailylogs.DetailLogs">
+
+    <EditText
+        android:id="@+id/detail_logs_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:cursorVisible="false"
+        android:elevation="@dimen/activity_horizontal_margin"
+        android:gravity="top"
+        android:padding="8dp"
+        android:textSize="20sp"
+        android:typeface="monospace"/>
+</RelativeLayout>

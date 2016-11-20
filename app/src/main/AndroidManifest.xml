@@ -18,6 +18,16 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".CreateLogs"
+            android:label="Create Log"
+            android:parentActivityName=".MainActivity">
+        </activity>
+        <activity
+            android:name=".DetailLogs"
+            android:label=""
+            android:parentActivityName=".MainActivity">
+        </activity>
     </application>
 
 </manifest>
