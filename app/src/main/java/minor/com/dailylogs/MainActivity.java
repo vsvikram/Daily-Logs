@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<LogsProperties> data;
     private RecyclerView.Adapter adapter;
     TextView logsEntry;
-    boolean linearLayoutManager = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +71,8 @@ public class MainActivity extends AppCompatActivity
 
     public void setLayoutManager() {
         recyclerView.setHasFixedSize(true);
-        if (linearLayoutManager) recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        if (((MyApplication) this.getApplication()).getManager())
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
         else
             recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         adapter = new CardViewDataAdapter(data);
@@ -109,7 +109,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, MainActivity.class));
             finish();
         } else if (id == R.id.action_switch_views) {
-            linearLayoutManager = !linearLayoutManager;
+            boolean layoutmanager = ((MyApplication) this.getApplication()).getManager();
+            ((MyApplication) this.getApplication()).setManager(!layoutmanager);
             setLayoutManager();
         }
 
