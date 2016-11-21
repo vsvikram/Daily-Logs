@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<LogsProperties> data;
     private RecyclerView.Adapter adapter;
     TextView logsEntry;
+    boolean linearLayoutManager = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +57,7 @@ public class MainActivity extends AppCompatActivity
                 data.add(logsProperties);
             } while (c.moveToPrevious());
         }
-
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new CardViewDataAdapter(data);
-        recyclerView.setAdapter(adapter);
+        setLayoutManager();
         logsEntry = (TextView) findViewById(R.id.logs_entry);
         logsEntry.setOnClickListener(new View.OnClickListener() {
 
@@ -70,6 +68,15 @@ public class MainActivity extends AppCompatActivity
                 finish();
             }
         });
+    }
+
+    public void setLayoutManager() {
+        recyclerView.setHasFixedSize(true);
+        if (linearLayoutManager) recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        else
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        adapter = new CardViewDataAdapter(data);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -101,6 +108,9 @@ public class MainActivity extends AppCompatActivity
             else Toast.makeText(this, "Error: Logs not Deleted", Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, MainActivity.class));
             finish();
+        } else if (id == R.id.action_switch_views) {
+            linearLayoutManager = !linearLayoutManager;
+            setLayoutManager();
         }
 
         return super.onOptionsItemSelected(item);
