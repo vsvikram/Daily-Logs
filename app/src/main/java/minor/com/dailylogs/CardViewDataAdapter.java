@@ -56,11 +56,28 @@ public class CardViewDataAdapter extends RecyclerView.Adapter<CardViewDataAdapte
 
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, DetailLogs.class);
-                    intent.putExtra("data", lp.getTitle());
-                    intent.putExtra("id", lp.getId());
-                    context.startActivity(intent);
-                    ((Activity) context).finish();
+                    if (((MyApplication) context.getApplicationContext()).getLongPressStatus()) {
+                        Intent intent = new Intent(context, DetailLogs.class);
+                        intent.putExtra("data", lp.getTitle());
+                        intent.putExtra("id", lp.getId());
+                        context.startActivity(intent);
+                        ((Activity) context).finish();
+                    } else {
+                        v.setBackgroundResource(R.color.colorAccent);
+                        ((MyApplication) context.getApplicationContext()).setLongPressId(lp.getId());
+                    }
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View v) {
+                    v.setBackgroundResource(R.color.colorAccent);
+                    ((MyApplication) context.getApplicationContext()).setLongPressStatus(false);
+                    ((MyApplication) context.getApplicationContext()).setLongPressId(lp.getId());
+                    ((MainActivity) context).invalidateOptionsMenu();
+                    return true;
                 }
             });
         }

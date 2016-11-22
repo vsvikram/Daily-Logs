@@ -67,6 +67,13 @@ public class MainActivity extends AppCompatActivity
                 finish();
             }
         });
+
+        if (data.isEmpty()) {
+            TextView tv = (TextView) findViewById(R.id.noLogsYetTextView);
+            tv.setText("There are no logs created!");
+
+        }
+
     }
 
     public void setLayoutManager() {
@@ -84,6 +91,11 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (!((MyApplication) this.getApplication()).getLongPressStatus()) {
+            ((MyApplication) this.getApplication()).setLongPressStatus(true);
+            ((MyApplication) this.getApplication()).idToBeDeleted.clear();
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
         } else {
             super.onBackPressed();
         }
@@ -93,6 +105,28 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        if (data.isEmpty()) {
+            menu.findItem(R.id.action_switch_views).setEnabled(false).setVisible(false);
+            menu.findItem(R.id.action_clearAll).setEnabled(false).setVisible(false);
+            menu.findItem(R.id.delete_selected).setEnabled(false).setVisible(false);
+        } else {
+            if (((MyApplication) this.getApplication()).getLongPressStatus()) {
+                menu.findItem(R.id.delete_selected).setEnabled(false).setVisible(false);
+                menu.findItem(R.id.action_switch_views).setEnabled(true).setVisible(true);
+                if (((MyApplication) this.getApplication()).getManager())
+                    menu.findItem(R.id.action_switch_views).setIcon(R.drawable.ic_action_view_as_grid);
+                else
+                    menu.findItem(R.id.action_switch_views).setIcon(R.drawable.ic_action_view_as_list);
+            } else {
+                menu.findItem(R.id.delete_selected).setEnabled(true).setVisible(true);
+                menu.findItem(R.id.action_switch_views).setEnabled(false).setVisible(false);
+                menu.findItem(R.id.action_clearAll).setEnabled(false).setVisible(false);
+                logsEntry.setVisibility(View.INVISIBLE);
+                logsEntry.setEnabled(false);
+            }
+        }
+
         return true;
     }
 
@@ -109,13 +143,25 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, MainActivity.class));
             finish();
         } else if (id == R.id.action_switch_views) {
-            boolean layoutmanager = ((MyApplication) this.getApplication()).getManager();
-            ((MyApplication) this.getApplication()).setManager(!layoutmanager);
+            ((MyApplication) this.getApplication()).setManager(!((MyApplication) this.getApplication()).getManager());
             setLayoutManager();
+            invalidateOptionsMenu();
+        } else if (id == R.id.delete_selected) {
+            LogsandDatabase logsandDatabase = new LogsandDatabase(this);
+            logsandDatabase.open();
+            for (int i = 0; i < ((MyApplication) this.getApplication()).idToBeDeleted.size(); i++) {
+                logsandDatabase.deleteLog(((MyApplication) this.getApplication()).idToBeDeleted.get(i));
+            }
+            logsandDatabase.close();
+            ((MyApplication) this.getApplication()).setLongPressStatus(true);
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
