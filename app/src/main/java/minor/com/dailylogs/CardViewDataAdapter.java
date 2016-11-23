@@ -33,7 +33,8 @@ public class CardViewDataAdapter extends RecyclerView.Adapter<CardViewDataAdapte
     @Override
     public void onBindViewHolder(CardViewDataAdapter.ViewHolder holder, int position) {
         LogsProperties logsProperties = logsData.get(position);
-        holder.textView.setText(logsProperties.getTitle());
+        holder.textView.setText(logsProperties.getLogs());
+        holder.label.setText(logsProperties.getTitle());
         holder.lp = logsProperties;
     }
 
@@ -46,20 +47,23 @@ public class CardViewDataAdapter extends RecyclerView.Adapter<CardViewDataAdapte
 
         private Context context;
         TextView textView;
+        TextView label;
         LogsProperties lp;
 
         public ViewHolder(View itemView) {
             super(itemView);
             context = itemView.getContext();
-            textView = (TextView) itemView.findViewById(R.id.title);
+            textView = (TextView) itemView.findViewById(R.id.logs);
+            label = (TextView) itemView.findViewById(R.id.title);
             itemView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
                     if (((MyApplication) context.getApplicationContext()).getLongPressStatus()) {
                         Intent intent = new Intent(context, DetailLogs.class);
-                        intent.putExtra("data", lp.getTitle());
+                        intent.putExtra("data", lp.getLogs());
                         intent.putExtra("id", lp.getId());
+                        intent.putExtra("title", lp.getTitle());
                         context.startActivity(intent);
                         ((Activity) context).finish();
                     } else {

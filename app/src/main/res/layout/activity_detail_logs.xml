@@ -8,13 +8,28 @@
     tools:context="minor.com.dailylogs.DetailLogs">
 
     <EditText
+        android:id="@+id/detail_title_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:cursorVisible="false"
+        android:focusable="true"
+        android:gravity="top"
+        android:hint="Title"
+        android:padding="8dp"
+        android:textSize="15sp"
+        android:typeface="monospace"/>
+
+    <EditText
         android:id="@+id/detail_logs_edittext"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/detail_title_edittext"
         android:background="@android:color/transparent"
         android:cursorVisible="false"
-        android:elevation="@dimen/activity_horizontal_margin"
+        android:focusable="true"
         android:gravity="top"
+        android:hint="Create Logs here..."
         android:padding="8dp"
         android:textSize="20sp"
         android:typeface="monospace"/>

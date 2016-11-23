@@ -51,8 +51,9 @@ public class MainActivity extends AppCompatActivity
         if (c != null && c.moveToLast()) {
             do {
                 LogsProperties logsProperties = new LogsProperties();
-                logsProperties.setTitle(c.getString(1));
+                logsProperties.setLogs(c.getString(1));
                 logsProperties.setId(c.getLong(0));
+                logsProperties.setTitle(c.getString(2));
                 data.add(logsProperties);
             } while (c.moveToPrevious());
         }

@@ -15,6 +15,7 @@ public class DetailLogs extends AppCompatActivity implements View.OnClickListene
     long row_id;
     String log;
     EditText editText;
+    EditText titles;
     boolean disableUpdateflag = true;
 
     @Override
@@ -22,11 +23,31 @@ public class DetailLogs extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_logs);
         editText = (EditText) findViewById(R.id.detail_logs_edittext);
+        titles = (EditText) findViewById(R.id.detail_title_edittext);
         Intent intent = getIntent();
         log = intent.getStringExtra("data");
         row_id = intent.getLongExtra("id", 0);
         editText.setText(log);
+        titles.setText(intent.getStringExtra("title"));
         editText.setOnClickListener(this);
+        titles.setOnClickListener(this);
+        titles.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                disableUpdateflag = false;
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -80,7 +101,7 @@ public class DetailLogs extends AppCompatActivity implements View.OnClickListene
         } else if (id == R.id.action_update) {
             LogsandDatabase logsandDatabase = new LogsandDatabase(this);
             logsandDatabase.open();
-            if (logsandDatabase.updateLogs(row_id, editText.getText().toString()))
+            if (logsandDatabase.updateLogs(row_id, editText.getText().toString(), titles.getText().toString()))
                 Toast.makeText(this, "Log Updated", Toast.LENGTH_LONG).show();
             else Toast.makeText(this, "Update Failed", Toast.LENGTH_LONG).show();
             logsandDatabase.close();
@@ -97,6 +118,6 @@ public class DetailLogs extends AppCompatActivity implements View.OnClickListene
         int id = v.getId();
         if (id == R.id.detail_logs_edittext) {
             editText.setCursorVisible(true);
-        }
+        } else if (id == R.id.detail_title_edittext) titles.setCursorVisible(true);
     }
 }

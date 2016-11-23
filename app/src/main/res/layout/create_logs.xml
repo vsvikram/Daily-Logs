@@ -6,6 +6,19 @@
     android:orientation="vertical">
 
     <EditText
+        android:id="@+id/enter_title_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:cursorVisible="false"
+        android:focusable="true"
+        android:gravity="top"
+        android:hint="Title"
+        android:padding="8dp"
+        android:textSize="15sp"
+        android:typeface="monospace"/>
+
+    <EditText
         android:id="@+id/enter_logs_edittext"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

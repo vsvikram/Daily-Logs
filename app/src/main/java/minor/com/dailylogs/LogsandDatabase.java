@@ -12,6 +12,7 @@ public class LogsandDatabase {
 
     public static final String id = "_id";
     public static final String logs = "logs";
+    public static final String title = "title";
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
     private static final String DATABASE_NAME = "logs_database";
@@ -20,7 +21,7 @@ public class LogsandDatabase {
 
     private static final String DATABASE_CREATE =
             "create table " + DATABASE_TABLE + " (" + id + " integer primary key autoincrement, "
-                    + logs + " text not null);";
+                    + logs + " text not null, " + title + " text not null);";
 
     private final Context mCtx;
 
@@ -55,9 +56,10 @@ public class LogsandDatabase {
         mDbHelper.close();
     }
 
-    public boolean createLogs(String log) {
+    public boolean createLogs(String log, String titles) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(logs, log);
+        initialValues.put(title, titles);
         return mDb.insert(DATABASE_TABLE, null, initialValues) > 0;
     }
 
@@ -81,12 +83,13 @@ public class LogsandDatabase {
 
     public Cursor fetchAllLogs() {
 
-        return mDb.query(DATABASE_TABLE, new String[]{id, logs}, null, null, null, null, null);
+        return mDb.query(DATABASE_TABLE, new String[]{id, logs, title}, null, null, null, null, null);
     }
 
-    public boolean updateLogs(long row_id, String log) {
+    public boolean updateLogs(long row_id, String log, String titles) {
         ContentValues updatedValues = new ContentValues();
         updatedValues.put(logs, log);
+        updatedValues.put(title, titles);
         return mDb.update(DATABASE_TABLE, updatedValues, row_id + "=" + id, null) > 0;
     }
 

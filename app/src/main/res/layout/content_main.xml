@@ -14,6 +14,17 @@
         android:scrollbars="vertical"/>
 
     <TextView
+        android:id="@+id/noLogsYetTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:alpha="0.6"
+        android:gravity="center"
+        android:padding="16dp"
+        android:textSize="20sp"
+        android:typeface="monospace"/>
+
+    <TextView
         android:id="@+id/logs_entry"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
