@@ -13,6 +13,8 @@ public class MyApplication extends Application {
     private boolean linearLayoutManager = true;
     private boolean longPressDisable = true;
     public ArrayList<Long> idToBeDeleted = new ArrayList<>();
+    public ArrayList<String> menuList = new ArrayList<>();
+    public String labelName = "Daily Logs";
 
     public void setManager(boolean linearLayoutManager) {
         this.linearLayoutManager = linearLayoutManager;

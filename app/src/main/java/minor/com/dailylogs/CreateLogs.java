@@ -70,7 +70,7 @@ public class CreateLogs extends AppCompatActivity implements View.OnClickListene
             String titles = title.getText().toString();
             LogsandDatabase logsandDatabase = new LogsandDatabase(this);
             logsandDatabase.open();
-            if (logsandDatabase.createLogs(logs, titles))
+            if (logsandDatabase.createLogs(logs, titles, ((MyApplication) this.getApplication()).labelName))
                 Toast.makeText(this, "Log Saved", Toast.LENGTH_LONG).show();
             else Toast.makeText(this, "Error: Log not saved", Toast.LENGTH_LONG).show();
             logsandDatabase.close();

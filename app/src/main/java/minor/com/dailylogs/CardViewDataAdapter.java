@@ -67,8 +67,13 @@ public class CardViewDataAdapter extends RecyclerView.Adapter<CardViewDataAdapte
                         context.startActivity(intent);
                         ((Activity) context).finish();
                     } else {
-                        v.setBackgroundResource(R.color.colorAccent);
-                        ((MyApplication) context.getApplicationContext()).setLongPressId(lp.getId());
+                        if (!((MyApplication) context.getApplicationContext()).idToBeDeleted.contains(lp.getId())) {
+                            v.setBackgroundResource(R.color.colorAccent);
+                            ((MyApplication) context.getApplicationContext()).setLongPressId(lp.getId());
+                        } else {
+                            v.setBackgroundResource(android.R.color.white);
+                            ((MyApplication) context.getApplicationContext()).idToBeDeleted.remove(lp.getId());
+                        }
                     }
                 }
             });

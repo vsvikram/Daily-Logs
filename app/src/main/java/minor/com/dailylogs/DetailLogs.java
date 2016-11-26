@@ -90,7 +90,7 @@ public class DetailLogs extends AppCompatActivity implements View.OnClickListene
         if (id == R.id.action_delete) {
             LogsandDatabase logsandDatabase = new LogsandDatabase(this);
             logsandDatabase.open();
-            if (logsandDatabase.deleteLog(row_id)) {
+            if (logsandDatabase.deleteLog(row_id,((MyApplication) this.getApplication()).labelName)) {
                 Toast.makeText(this, "Delete Successful", Toast.LENGTH_LONG).show();
             } else Toast.makeText(this, "Delete failed" + row_id, Toast.LENGTH_LONG).show();
             logsandDatabase.close();
@@ -101,7 +101,7 @@ public class DetailLogs extends AppCompatActivity implements View.OnClickListene
         } else if (id == R.id.action_update) {
             LogsandDatabase logsandDatabase = new LogsandDatabase(this);
             logsandDatabase.open();
-            if (logsandDatabase.updateLogs(row_id, editText.getText().toString(), titles.getText().toString()))
+            if (logsandDatabase.updateLogs(row_id, editText.getText().toString(), titles.getText().toString(),((MyApplication) this.getApplication()).labelName))
                 Toast.makeText(this, "Log Updated", Toast.LENGTH_LONG).show();
             else Toast.makeText(this, "Update Failed", Toast.LENGTH_LONG).show();
             logsandDatabase.close();

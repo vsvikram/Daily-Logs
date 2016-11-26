@@ -13,6 +13,7 @@ public class LogsandDatabase {
     public static final String id = "_id";
     public static final String logs = "logs";
     public static final String title = "title";
+    public static final String label = "label";
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
     private static final String DATABASE_NAME = "logs_database";
@@ -21,7 +22,7 @@ public class LogsandDatabase {
 
     private static final String DATABASE_CREATE =
             "create table " + DATABASE_TABLE + " (" + id + " integer primary key autoincrement, "
-                    + logs + " text not null, " + title + " text not null);";
+                    + logs + " text not null, " + title + " text not null, " + label + " text not null);";
 
     private final Context mCtx;
 
@@ -56,14 +57,15 @@ public class LogsandDatabase {
         mDbHelper.close();
     }
 
-    public boolean createLogs(String log, String titles) {
+    public boolean createLogs(String log, String titles, String labels) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(logs, log);
         initialValues.put(title, titles);
+        initialValues.put(label, labels);
         return mDb.insert(DATABASE_TABLE, null, initialValues) > 0;
     }
 
-    public Cursor fetchLog(long row_id) throws SQLException {
+    /*public Cursor fetchLog(long row_id) throws SQLException {
 
         Cursor mCursor =
 
@@ -75,26 +77,28 @@ public class LogsandDatabase {
         }
         return mCursor;
 
+    }*/
+
+    public boolean deleteLog(long row_id, String labels) {
+        return mDb.delete(DATABASE_TABLE, id + " = ? and " + label + " = ?", new String[]{String.valueOf(row_id), String.valueOf(labels)}) > 0;
     }
 
-    public boolean deleteLog(long row_id) {
-        return mDb.delete(DATABASE_TABLE, id + "=" + row_id, null) > 0;
+    public Cursor fetchAllLogs(String labels) {
+
+        return mDb.query(DATABASE_TABLE, new String[]{id,
+                        logs, title}, label + "=?",
+                new String[]{String.valueOf(labels)}, null, null, null, null);
     }
 
-    public Cursor fetchAllLogs() {
-
-        return mDb.query(DATABASE_TABLE, new String[]{id, logs, title}, null, null, null, null, null);
-    }
-
-    public boolean updateLogs(long row_id, String log, String titles) {
+    public boolean updateLogs(long row_id, String log, String titles, String labels) {
         ContentValues updatedValues = new ContentValues();
         updatedValues.put(logs, log);
         updatedValues.put(title, titles);
-        return mDb.update(DATABASE_TABLE, updatedValues, row_id + "=" + id, null) > 0;
+        return mDb.update(DATABASE_TABLE, updatedValues, row_id + " = ? and " + label + " = ?", new String[]{String.valueOf(row_id), String.valueOf(labels)}) > 0;
     }
 
-    public boolean deleteAll() {
-        return mDb.delete(DATABASE_TABLE, null, null) > 0;
+    public boolean deleteAll(String labels) {
+        return mDb.delete(DATABASE_TABLE, label + " = ?", new String[]{String.valueOf(labels)}) > 0;
     }
 
 

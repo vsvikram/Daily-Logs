@@ -17,7 +17,7 @@
         android:gravity="top"
         android:hint="Title"
         android:padding="8dp"
-        android:textSize="15sp"
+        android:textSize="18sp"
         android:typeface="monospace"/>
 
     <EditText

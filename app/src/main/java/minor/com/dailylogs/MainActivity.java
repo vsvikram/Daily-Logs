@@ -1,5 +1,7 @@
 package minor.com.dailylogs;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -7,14 +9,17 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,16 +28,20 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     RecyclerView recyclerView;
+    Toolbar toolbar;
     private ArrayList<LogsProperties> data;
     private RecyclerView.Adapter adapter;
-    TextView logsEntry;
+    private TextView logsEntry;
+    private Menu menu;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(((MyApplication) this.getApplication()).labelName);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -43,10 +52,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        menu = navigationView.getMenu();
 
+        addMenuItems();
         LogsandDatabase logsandDatabase = new LogsandDatabase(this);
         logsandDatabase.open();
-        Cursor c = logsandDatabase.fetchAllLogs();
+        Cursor c = logsandDatabase.fetchAllLogs(((MyApplication) this.getApplication()).labelName);
         data = new ArrayList<>();
         if (c != null && c.moveToLast()) {
             do {
@@ -71,9 +82,16 @@ public class MainActivity extends AppCompatActivity
 
         if (data.isEmpty()) {
             TextView tv = (TextView) findViewById(R.id.noLogsYetTextView);
-            tv.setText("There are no logs created!");
+            tv.setText("There are no logs created under this label!");
 
         }
+
+    }
+
+    public void addMenuItems() {
+        for (int i = (menu.size() - 2); i < ((MyApplication) this.getApplication()).menuList.size(); i++)
+            menu.add(R.id.newLableGroup, Menu.NONE, Menu.NONE, ((MyApplication) this.getApplication()).menuList.get(i))
+                    .setIcon(android.R.drawable.btn_star);
 
     }
 
@@ -138,7 +156,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_clearAll) {
             LogsandDatabase logsandDatabase = new LogsandDatabase(this);
             logsandDatabase.open();
-            if (logsandDatabase.deleteAll())
+            if (logsandDatabase.deleteAll(((MyApplication) this.getApplication()).labelName))
                 Toast.makeText(this, "Logs Deleted", Toast.LENGTH_LONG).show();
             else Toast.makeText(this, "Error: Logs not Deleted", Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, MainActivity.class));
@@ -151,7 +169,7 @@ public class MainActivity extends AppCompatActivity
             LogsandDatabase logsandDatabase = new LogsandDatabase(this);
             logsandDatabase.open();
             for (int i = 0; i < ((MyApplication) this.getApplication()).idToBeDeleted.size(); i++) {
-                logsandDatabase.deleteLog(((MyApplication) this.getApplication()).idToBeDeleted.get(i));
+                logsandDatabase.deleteLog(((MyApplication) this.getApplication()).idToBeDeleted.get(i), ((MyApplication) this.getApplication()).labelName);
             }
             logsandDatabase.close();
             ((MyApplication) this.getApplication()).setLongPressStatus(true);
@@ -169,21 +187,33 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        ((MyApplication) this.getApplication()).labelName = item.getTitle().toString();
+        if (id == R.id.nav_addLabel) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            final Context context = this;
+            builder.setTitle("New Label");
+            final EditText input = new EditText(this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ((MyApplication) context.getApplicationContext()).menuList.add(input.getText().toString());
+                    addMenuItems();
+                    Toast.makeText(context, "Label Created", Toast.LENGTH_LONG).show();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.show();
+        } else {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
