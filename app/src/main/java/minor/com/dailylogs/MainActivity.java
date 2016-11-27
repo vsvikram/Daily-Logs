@@ -145,6 +145,9 @@ public class MainActivity extends AppCompatActivity
                 logsEntry.setEnabled(false);
             }
         }
+        if (!((MyApplication) this.getApplication()).labelName.equals("Daily Logs")) {
+            menu.add("Delete Label");
+        }
 
         return true;
     }
@@ -152,6 +155,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        String title = item.getTitle().toString();
 
         if (id == R.id.action_clearAll) {
             LogsandDatabase logsandDatabase = new LogsandDatabase(this);
@@ -176,6 +180,18 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, MainActivity.class));
             finish();
 
+        } else if (title.equals("Delete Label")) {
+            LogsandDatabase logsandDatabase = new LogsandDatabase(this);
+            logsandDatabase.open();
+            if (logsandDatabase.deleteAll(((MyApplication) this.getApplication()).labelName))
+                Toast.makeText(this, "Logs Deleted", Toast.LENGTH_LONG).show();
+            else Toast.makeText(this, "Error: Logs not Deleted", Toast.LENGTH_LONG).show();
+            ((MyApplication) this.getApplicationContext()).menuList.remove(((MyApplication) this.getApplication()).labelName);
+            addMenuItems();
+            Toast.makeText(this, "Label Removed", Toast.LENGTH_LONG).show();
+            ((MyApplication) this.getApplication()).labelName = "Daily Logs";
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
