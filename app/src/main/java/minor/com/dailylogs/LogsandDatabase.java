@@ -94,7 +94,7 @@ public class LogsandDatabase {
         ContentValues updatedValues = new ContentValues();
         updatedValues.put(logs, log);
         updatedValues.put(title, titles);
-        return mDb.update(DATABASE_TABLE, updatedValues, row_id + " = ? and " + label + " = ?", new String[]{String.valueOf(row_id), String.valueOf(labels)}) > 0;
+        return mDb.update(DATABASE_TABLE, updatedValues, id + " = ? and " + label + " = ?", new String[]{String.valueOf(row_id), String.valueOf(labels)}) > 0;
     }
 
     public boolean deleteAll(String labels) {

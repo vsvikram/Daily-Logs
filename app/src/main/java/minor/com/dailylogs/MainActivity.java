@@ -52,6 +52,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        TextView name = (TextView) findViewById(R.id.name);
+        TextView email = (TextView) findViewById(R.id.email);
+        if (getIntent().hasExtra("Name"))
+            name.setText(getIntent().getExtras().getCharSequence("Name"));
+        if (getIntent().hasExtra("Email"))
+            email.setText(getIntent().getExtras().getCharSequence("Email"));
         menu = navigationView.getMenu();
 
         addMenuItems();

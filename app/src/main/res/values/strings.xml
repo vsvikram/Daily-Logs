@@ -3,6 +3,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
+    <string name="welcome">Welcome to Daily Logs\n Save the things that matters to you</string>
+    <string name="loading">Loading</string>
     <string name="action_clear">Delete all</string>
 </resources>
